@@ -87,32 +87,32 @@ func TestClient_GetLogsWithPagination(t *testing.T) {
 		errContain string
 	}{
 		{
-			name: "no page or offset",
+			name: "no page or offset returns all logs",
 			page: 0, off: 0,
 			wantSlice: expectedLogs,
 		},
 		{
-			name: "page=1, offset=0",
+			name: "page=1, offset=0 returns all logs",
 			page: 1, off: 0,
 			wantSlice: expectedLogs,
 		},
 		{
-			name: "page=2, offset=0",
+			name: "page=2, offset=0 returns all logs",
 			page: 2, off: 0,
 			wantSlice: expectedLogs,
 		},
 		{
-			name: "page=1, offset=2",
+			name: "page=1, offset=2 returns first 2 logs of 4",
 			page: 1, off: 2,
 			wantSlice: expectedLogs[0:2],
 		},
 		{
-			name: "page=2, offset=2",
+			name: "page=2, offset=2 returns last 2 logs of 4",
 			page: 2, off: 2,
 			wantSlice: expectedLogs[2:4],
 		},
 		{
-			name: "page=5, offset=1",
+			name: "page=5, offset=1 returns no logs as page is beyond available logs",
 			page: 5, off: 1,
 			wantSlice:  []Log{},
 			wantErr:    true,
@@ -122,13 +122,12 @@ func TestClient_GetLogsWithPagination(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := api.GetLogsWithPagination(
+			got, err := api.GetLogs(
 				379224,
 				430000,
 				"0x33990122638b9132ca29c723bdf037f1a891a70c",
 				"0xf63780e752c6a54a94fc52715dbc5518a3b4c3c2833d301a204226548a2a8545",
-				tt.page,
-				tt.off,
+				WithPagination(tt.page, tt.off),
 			)
 
 			if tt.wantErr {
