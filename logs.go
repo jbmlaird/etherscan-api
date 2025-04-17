@@ -19,3 +19,17 @@ func (c *Client) GetLogs(fromBlock, toBlock int, address, topic string) (logs []
 	err = c.call("logs", "getLogs", param, &logs)
 	return
 }
+
+func (c *Client) GetLogsWithPagination(fromBlock, toBlock int, address, topic string, page, offset int) (logs []Log, err error) {
+	param := M{
+		"fromBlock": fromBlock,
+		"toBlock":   toBlock,
+		"topic0":    topic,
+		"address":   address,
+		"page":      page,
+		"offset":    offset,
+	}
+
+	err = c.call("logs", "getLogs", param, &logs)
+	return
+}
